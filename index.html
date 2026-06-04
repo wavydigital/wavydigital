@@ -1,0 +1,711 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Wavy Digital | High-Conversion Web Design Studio · Worldwide</title>  
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght=0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">  
+<style>  
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }  
+  
+  :root {
+    --black: #080808;
+    --white: #f5f2ee;
+    --accent: #c8f55a;
+    --accent-dark: #a8d93a;
+    --mid: #1a1a1a;
+    --muted: #888;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    backdrop-filter: blur(12px);
+    background: rgba(8,8,8,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--black);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .nav-cta:hover { background: var(--accent-dark); transform: scale(0.97); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 140px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(200,245,90,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(200,245,90,0.06) 0%, transparent 50%),
+      linear-gradient(to bottom, transparent, var(--black));
+    z-index: -1;
+  }
+  .hero-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .hero-headline {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  .hero-headline em {
+    font-style: normal;
+    color: var(--accent);
+    display: block;
+  }
+  .hero-bottom {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+  .hero-sub {
+    max-width: 500px;
+    color: rgba(245,242,238,0.75);
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 16px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 16px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { transform: scale(0.97); background: var(--accent-dark); }
+  .btn-ghost {
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .btn-ghost:hover { opacity: 1; }
+
+  .hero-scroll {
+    position: absolute; bottom: 32px; right: 48px;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; animation: fadeUp 0.8s ease 1s forwards;
+  }
+  .hero-scroll::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--muted);
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--mid);
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 40px;
+    flex-shrink: 0;
+  }
+  .marquee-item span { color: var(--accent); margin-right: 40px; }
+
+  /* SECTIONS */
+  section { padding: 120px 48px; }
+  .section-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 40px; height: 1px; background: var(--accent);
+  }
+
+  /* SERVICES */
+  .services { background: var(--black); }
+  .services-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 80px; flex-wrap: wrap; gap: 32px;
+  }
+  .services-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 550px;
+  }
+  .services-sub {
+    max-width: 350px;
+    color: rgba(245,242,238,0.6);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  .service-card {
+    background: var(--mid);
+    padding: 40px 32px;
+    position: relative; overflow: hidden;
+    transition: background 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  .service-card:hover { background: #222; transform: translateY(-2px); }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .service-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1.25rem;
+    margin-bottom: 16px; line-height: 1.2;
+  }
+  .service-desc {
+    color: rgba(245,242,238,0.6);
+    font-size: 0.9rem; line-height: 1.7;
+  }
+  .service-icon {
+    font-size: 2.2rem; margin-bottom: 20px; display: block;
+  }
+
+  /* WORK (PORTFOLIO) */
+  .work { background: var(--mid); }
+  .work-header { margin-bottom: 60px; }
+  .work-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .work-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .work-card {
+    background: var(--black);
+    border-radius: 16px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 450px;
+    transition: transform 0.3s ease;
+  }
+  .work-card:hover { transform: translateY(-4px); }
+  
+  .work-card-visual {
+    position: relative; 
+    overflow: hidden; 
+    padding: 0;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    background-color: #0e253c;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .img-barber { background-image: url('barber.jpg'); }
+  .img-detailing { background-image: url('detailing.jpg'); }
+  .img-dental { background-image: url('dental.jpg'); }
+  .img-gym { background-image: url('gym.jpg'); }
+  .img-realestate { background-image: url('realestate.jpg'); }
+  
+  .work-card-info {
+    padding: 56px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .work-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,245,90,0.1);
+    border: 1px solid rgba(200,245,90,0.2);
+    color: var(--accent);
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 24px; width: fit-content;
+  }
+  .work-client {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2rem;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .work-desc {
+    color: rgba(245,242,238,0.65);
+    font-size: 0.95rem; line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .work-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.85rem;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: gap 0.2s ease;
+  }
+  .work-link:hover { gap: 16px; }
+  .work-link-arrow { font-size: 1.1rem; }
+
+  /* ABOUT / PERFORMANCE */
+  .about { background: var(--black); }
+  .about-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .about-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  .about-body {
+    color: rgba(245,242,238,0.65);
+    font-size: 1rem; line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .about-location {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--accent); font-size: 0.85rem; font-weight: 500;
+    margin-top: 32px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .stat-card {
+    background: var(--mid);
+    padding: 32px;
+    border-radius: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0; 
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .stat-num sub { font-size: 1.5rem; vertical-align: middle; }
+  .stat-label {
+    color: rgba(245,242,238,0.6);
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* CONTACT / CTA */
+  .contact {
+    background: var(--accent);
+    padding: 140px 48px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .contact::before {
+    content: 'WAVY';
+    position: absolute;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 25vw;
+    color: rgba(0,0,0,0.04);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .contact-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(0,0,0,0.6);
+    margin-bottom: 24px;
+    position: relative; z-index: 2;
+  }
+  .contact-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 7vw, 5.5rem);
+    letter-spacing: -0.03em;
+    color: var(--black);
+    line-height: 1.05;
+    margin-bottom: 48px;
+    position: relative; z-index: 2;
+  }
+  .contact-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2; }
+  .btn-dark {
+    background: var(--black);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 18px 36px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-dark:hover { transform: scale(0.97); opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 60px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .footer-top {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.2rem;
+    color: var(--white); text-decoration: none;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-links {
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .btn-email {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.85rem;
+    text-decoration: none; padding: 12px 24px;
+    border-radius: 100px; transition: background 0.2s, color 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-email:hover { background: var(--white); color: var(--black); }
+  
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px; border-top: 1px solid var(--border); padding-top: 32px;
+  }
+  .footer-copy { color: var(--muted); font-size: 0.85rem; }
+  .footer-location { color: var(--muted); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* RESPONSIVE DESIGN */
+  @media (max-width: 992px) {
+    .work-card { grid-template-columns: 1fr; min-height: auto; }
+    .work-card-visual { min-height: 350px; }
+    .about-inner { grid-template-columns: 1fr; gap: 56px; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .hero { padding: 120px 24px 60px; }
+    section { padding: 80px 24px; }
+    .about-stats { grid-template-columns: 1fr; gap: 16px; }
+    .contact { padding: 100px 24px; }
+    footer { padding: 40px 24px; }
+    .footer-top, .footer-bottom { flex-direction: column; text-align: center; justify-content: center; }
+  }
+</style>
+  </head>
+  <body>  
+
+<!-- NAV -->  
+<nav>  
+  <a href="#" class="nav-logo">Wavy<span>.</span></a>  
+  <a href="https://wa.me/27714636308" class="nav-cta">Build Your Site →</a>  
+</nav>  
+
+<!-- HERO -->  
+<section class="hero">  
+  <div class="hero-bg"></div>  
+  <div class="hero-tag">Premium Digital Studio · Worldwide Delivery</div>  
+  <h1 class="hero-headline">  
+    We turn clicks<br>  
+    <em>into customers.</em>  
+  </h1>  
+  <div class="hero-bottom">  
+    <p class="hero-sub">Engineered for ultimate speed, striking visuals, and high conversion rates. We build elite digital platforms designed to upscale your brand and dominate your market.</p>  
+    <div class="hero-actions">  
+      <a href="https://wa.me/27714636308" class="btn-primary">Launch Your Website ↗</a>  
+      <a href="#work" class="btn-ghost">Explore Case Studies</a>  
+    </div>  
+  </div>  
+  <div class="hero-scroll">Scroll</div>  
+</section>  
+
+<!-- MARQUEE -->  
+<div class="marquee-wrap">  
+  <div class="marquee-track">  
+    <span class="marquee-item"><span>✦</span> Global Web Architecture</span>  
+    <span class="marquee-item"><span>✦</span> High-Conversion UI/UX</span>  
+    <span class="marquee-item"><span>✦</span> E-Commerce Infrastructure</span>  
+    <span class="marquee-item"><span>✦</span> Instant Booking Ecosystems</span>  
+    <span class="marquee-item"><span>✦</span> Lightning-Fast Loadtimes</span>  
+    <span class="marquee-item"><span>✦</span> Premium Corporate Identity</span>  
+    <span class="marquee-item"><span>✦</span> Global Scale</span>  
+    <span class="marquee-item"><span>✦</span> Web Design</span>  
+    <span class="marquee-item"><span>✦</span> Global Web Architecture</span>  
+    <span class="marquee-item"><span>✦</span> High-Conversion UI/UX</span>  
+    <span class="marquee-item"><span>✦</span> E-Commerce Infrastructure</span>  
+    <span class="marquee-item"><span>✦</span> Instant Booking Ecosystems</span>  
+    <span class="marquee-item"><span>✦</span> Lightning-Fast Loadtimes</span>  
+    <span class="marquee-item"><span>✦</span> Premium Corporate Identity</span>  
+    <span class="marquee-item"><span>✦</span> Global Scale</span>  
+    <span class="marquee-item"><span>✦</span> Web Design</span>  
+  </div>  
+</div>  
+
+<!-- SERVICES -->  
+<section class="services" id="services">  
+  <div class="services-header">  
+    <div>  
+      <div class="section-label">Core Specializations</div>  
+      <h2 class="services-title">Engineered exclusively for corporate & brand growth.</h2>  
+    </div>  
+    <p class="services-sub">Zero technical debt. Zero bloated agency overheads. Just flawless digital assets engineered to secure high sales volumes.</p>  
+  </div>  
+  <div class="services-grid">  
+    <div class="service-card">  
+      <span class="service-icon">🌐</span>  
+      <div class="service-num">01</div>  
+      <div class="service-name">Elite Web Design & Dev</div>  
+      <p class="service-desc">Tailor-made, pixel-perfect platforms built using top-tier design frameworks. Crafted meticulously to project ultimate market authority.</p>  
+    </div>  
+    <div class="service-card">  
+      <span class="service-icon">📱</span>  
+      <div class="service-num">02</div>  
+      <div class="service-name">Mobile Engine Optimization</div>  
+      <p class="service-desc">Over 80% of transactional users purchase on mobile devices. Our flawless responsive layouts lock in conversions on every display shape.</p>  
+    </div>  
+    <div class="service-card">  
+      <span class="service-icon">🛍️</span>  
+      <div class="service-num">03</div>  
+      <div class="service-name">Full E-Commerce Support</div>  
+      <p class="service-desc">End-to-end storefront deployment with fluid architectures, robust global payment checkouts, secure pipelines, and absolute inventory fluid control.</p>  
+    </div>  
+    <div class="service-card">  
+      <span class="service-icon">💬</span>  
+      <div class="service-num">04</div>  
+      <div class="service-name">Instant Lead Capture Systems</div>  
+      <p class="service-desc">Eliminate sales friction. We place structured automated systems like direct WhatsApp pipelines and single-tap scheduling loops onto your page.</p>  
+    </div>  
+  </div>  
+</section>
+<!-- WORK (PORTFOLIO GRID) -->  
+<section class="work" id="work">  
+  <div class="work-header">  
+    <div class="section-label">Selected Portfolio Assets</div>  
+    <h2 class="work-title">Case Studies in Scale & Conversion.</h2>  
+  </div>  
+  <div class="work-grid">  
+    
+    <!-- BARBERSHOP -->  
+    <div class="work-card">  
+      <div class="work-card-visual img-barber"></div>  
+      <div class="work-card-info">  
+        <div class="work-tag">✦ Service & Booking Engine</div>  
+        <div class="work-client">Florida's Barbershop</div>  
+        <p class="work-desc">A premium scheduling ecosystem designed to automate operations. Features include full multi-tier pricing grids, live direct WhatsApp booking integration, and mobile layouts crafted to maximize seat utility rates.</p>  
+        <a href="https://floridabarbershop.durable.site" target="_blank" class="work-link">Explore Enterprise Platform <span class="work-link-arrow">↗</span></a>  
+      </div>  
+    </div>  
+
+    <!-- AUTO DETAILING -->  
+    <div class="work-card">  
+      <div class="work-card-visual img-detailing"></div>  
+      <div class="work-card-info">  
+        <div class="work-tag">✦ Luxury Automotive Service</div>  
+        <div class="work-client">WFG Detailing</div>  
+        <p class="work-desc">High-end aesthetic presentation for an elite automotive brand. Implements rich asset styling, dynamic quote requests, tier breakdowns, and quick structural touchpoints to convert casual views into booked details.</p>  
+        <a href="https://wfgdetailing.durable.site" target="_blank" class="work-link">Explore Enterprise Platform <span class="work-link-arrow">↗</span></a>  
+      </div>  
+    </div>  
+
+    <!-- DENTAL CARE -->  
+    <div class="work-card">  
+      <div class="work-card-visual img-dental"></div>  
+      <div class="work-card-info">  
+        <div class="work-tag">✦ Healthcare & Patient Acquisition</div>  
+        <div class="work-client">Briteside Dental Care</div>  
+        <p class="work-desc">A pristine digital medical space optimized for patient conversions. Built with clean, accessible text hierarchies, trust signs, streamlined intake flows, and immediate emergency contact mechanisms.</p>  
+        <a href="https://briteside-dentalcare.durable.site" target="_blank" class="work-link">Explore Enterprise Platform <span class="work-link-arrow">↗</span></a>  
+      </div>  
+    </div>  
+
+    <!-- TRAINING STUDIO -->  
+    <div class="work-card">  
+      <div class="work-card-visual img-gym"></div>  
+      <div class="work-card-info">  
+        <div class="work-tag">✦ High-Performance Fitness Hub</div>  
+        <div class="work-client">Apex Training Studio</div>  
+        <p class="work-desc">High-energy landing experience constructed for membership retention and signups. Uses immersive media blocks, scheduling embeds, and strategic psychological triggers to accelerate customer sign-up rates.</p>  
+        <a href="https://apextrainingstudio.durable.site" target="_blank" class="work-link">Explore Enterprise Platform <span class="work-link-arrow">↗</span></a>  
+      </div>  
+    </div>  
+
+    <!-- REAL ESTATE -->  
+    <div class="work-card">  
+      <div class="work-card-visual img-realestate"></div>  
+      <div class="work-card-info">  
+        <div class="work-tag">✦ Premium Real Estate Platform</div>  
+        <div class="work-client">Grant Mokoena Properties</div>  
+        <p class="work-desc">An elegant high-value property catalog system. Crafted to exhibit structural architecture cleanly, map geographic details clearly, and maximize consultation inquiries via immediate direct communication pipelines.</p>  
+        <a href="https://grantmokoenaproperties.durable.site" target="_blank" class="work-link">Explore Enterprise Platform <span class="work-link-arrow">↗</span></a>  
+      </div>  
+    </div>  
+
+  </div>  
+</section>  
+
+<!-- ABOUT / DATA PERFORMANCE -->  
+<section class="about">  
+  <div class="about-inner">  
+    <div>  
+      <div class="section-label">Our Philosophy</div>  
+      <h2 class="about-title">We don't build digital decorations. We engineer business systems.</h2>  
+      <p class="about-body">At Wavy Digital, we look past trivial metrics. A premium digital asset must actively capture pipeline volume, protect profit margins, and lock down incoming contracts automatically.</p>  
+      <p class="about-body">By merging international styling systems with aggressive transaction funnel models, we make sure your company maintains market dominance over global competitors.</p>  
+      <div class="about-location">  
+        <span>🌐</span> Serving High-Growth Enterprises Worldwide  
+      </div>  
+    </div>  
+    <div class="about-stats">  
+      <div class="stat-card">  
+        <div class="stat-num">2x</div>  
+        <div class="stat-label">Average Increase in User Inbound Conversion</div>  
+      </div>  
+      <div class="stat-card">  
+        <div class="stat-num">&lt;2s</div>  
+        <div class="stat-label">Ultra-Fast Structural Page Loading Benchmarks</div>  
+      </div>  
+      <div class="stat-card">  
+        <div class="stat-num">100%</div>  
+        <div class="stat-label">Mobile Responsive UI Integration Guarantee</div>  
+      </div>  
+      <div class="stat-card">  
+        <div class="stat-num">24/7</div>  
+        <div class="stat-label">Automated Scheduling Lead Generation Ecosystem</div>  
+      </div>  
+    </div>  
+  </div>  
+</section>  
+
+<!-- CONTACT / FINAL CTA -->  
+<section class="contact">  
+  <div class="contact-label">Secure Your Growth Phase</div>  
+  <h2 class="contact-title">Ready to outpace your market competitors?</h2>  
+  <div class="contact-actions">  
+    <a href="https://wa.me/27714636308" class="btn-dark">Start Consultation via WhatsApp ↗</a>  
+  </div>  
+</section>  
+
+<!-- FOOTER -->  
+<footer>  
+  <div class="footer-top">  
+    <a href="#" class="footer-logo">Wavy<span>.</span></a>  
+    <div class="footer-links">  
+      <a href="mailto:wavydigital.online@gmail.com" class="btn-email">✉ wavydigital.online@gmail.com</a>  
+    </div>  
+  </div>  
+  <div class="footer-bottom">  
+    <p class="footer-copy">&copy; 2026 Wavy Digital. All Rights Reserved. Engineered for Global Scale.</p>  
+    <div class="footer-location">  
+      <span>📍</span> International Web Operations  
+    </div>  
+  </div>  
+</footer>  
+
+</body>  
+</html>
